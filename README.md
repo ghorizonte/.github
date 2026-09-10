@@ -1,0 +1,2 @@
+# .github
+Padronização da Organização
