@@ -1,6 +1,6 @@
 # Governanca Corporativa de Agentes de IA para Desenvolvimento
 
-Versao: 1.1
+Versao: 1.2
 Status: Padrao corporativo
 Escopo oficial: Codex, Claude e Devin
 
@@ -18,6 +18,7 @@ Estabelecer regras obrigatorias para uso de agentes de IA em desenvolvimento de 
 6. A identidade que executa trabalho tecnico deve ser separada, sempre que tecnicamente possivel, da identidade humana que revisa e aprova.
 7. Ferramenta aprovada nao implica acesso irrestrito a repositorios, dados, ambientes, secrets ou configuracoes.
 8. Toda automacao deve operar com menor privilegio e dentro do escopo explicitamente autorizado.
+9. Enquanto o controle temporario de autoridade estiver vigente, somente `@edsoness-hub` pode autorizar a adocao de mudancas na politica corporativa de governanca ou em seus mecanismos executaveis.
 
 ## Classificacao corporativa de risco
 
@@ -35,6 +36,7 @@ Regras obrigatorias:
 - na duvida, o risco sobe;
 - classificacao de risco nao autoriza um agente a aprovar o proprio trabalho;
 - alteracoes de rulesets, CODEOWNERS, permissoes, bypasses, secrets ou controles de seguranca exigem autorizacao explicita;
+- enquanto o controle temporario de autoridade estiver vigente, mudancas em `AI-DEVELOPMENT-GOVERNANCE.md`, `AGENTS.md`, `CLAUDE.md`, `DEVIN.md`, `.github/CODEOWNERS`, politicas de risco e mecanismos centrais de governanca somente podem ser adotadas com aprovacao de `@edsoness-hub`; outros humanos e agentes podem propor e revisar tecnicamente essas mudancas, mas nao substituem essa autorizacao;
 - durante o shadow mode, o classificador e informativo e nao altera os requisitos existentes de merge.
 
 A politica executavel de cada repositorio fica em `.github/risk-policy.json`. Repositorios podem adicionar regras mais restritivas, mas nao reduzir o baseline corporativo sem excecao formal.
