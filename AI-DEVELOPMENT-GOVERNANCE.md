@@ -1,6 +1,6 @@
 # Governanca Corporativa de Agentes de IA para Desenvolvimento
 
-Versao: 1.2
+Versao: 1.5
 Status: Padrao corporativo
 Escopo oficial: Codex, Claude e Devin
 
@@ -11,14 +11,13 @@ Estabelecer regras obrigatorias para uso de agentes de IA em desenvolvimento de 
 ## Principios
 
 1. IA pode produzir codigo, analisar, testar, documentar e preparar mudancas.
-2. A autonomia de aprovacao deve ser proporcional ao risco da mudanca.
-3. Durante o shadow mode, toda aprovacao continua humana, inclusive para PRs classificados como LOW.
-4. Autonomia futura para LOW somente pode ser habilitada apos homologacao explicita da politica corporativa.
-5. MEDIUM, HIGH e CRITICAL permanecem sujeitos a aprovacao humana.
-6. A identidade que executa trabalho tecnico deve ser separada, sempre que tecnicamente possivel, da identidade humana que revisa e aprova.
-7. Ferramenta aprovada nao implica acesso irrestrito a repositorios, dados, ambientes, secrets ou configuracoes.
-8. Toda automacao deve operar com menor privilegio e dentro do escopo explicitamente autorizado.
-9. Enquanto o controle temporario de autoridade estiver vigente, somente `@edsoness-hub` pode autorizar a adocao de mudancas na politica corporativa de governanca ou em seus mecanismos executaveis.
+2. A autonomia de aprovacao e proporcional ao risco da mudanca.
+3. No piloto corporativo, PRs LOW e MEDIUM podem receber autorizacao tecnica automatica nos repositorios operacionais elegiveis.
+4. HIGH e CRITICAL permanecem sujeitos a aprovacao humana valida no head atual.
+5. A autorizacao automatica deve ser emitida por identidade tecnica revisora separada da identidade produtora do PR.
+6. Ferramenta aprovada nao implica acesso irrestrito a repositorios, dados, ambientes, secrets ou configuracoes.
+7. Toda automacao deve operar com menor privilegio e dentro do escopo explicitamente autorizado.
+8. Enquanto o controle temporario de autoridade estiver vigente, somente `@edsoness-hub` pode autorizar a adocao de mudancas na politica corporativa de governanca ou em seus mecanismos executaveis.
 
 ## Classificacao corporativa de risco
 
@@ -36,10 +35,12 @@ Regras obrigatorias:
 - na duvida, o risco sobe;
 - classificacao de risco nao autoriza um agente a aprovar o proprio trabalho;
 - alteracoes de rulesets, CODEOWNERS, permissoes, bypasses, secrets ou controles de seguranca exigem autorizacao explicita;
-- enquanto o controle temporario de autoridade estiver vigente, mudancas em `AI-DEVELOPMENT-GOVERNANCE.md`, `AGENTS.md`, `CLAUDE.md`, `DEVIN.md`, `.github/CODEOWNERS`, politicas de risco e mecanismos centrais de governanca somente podem ser adotadas com aprovacao de `@edsoness-hub`; outros humanos e agentes podem propor e revisar tecnicamente essas mudancas, mas nao substituem essa autorizacao;
-- durante o shadow mode, o classificador e informativo e nao altera os requisitos existentes de merge.
+- LOW e MEDIUM podem receber autorizacao automatica apenas quando todos os requisitos do piloto forem atendidos;
+- HIGH e CRITICAL nunca recebem autorizacao automatica;
+- a autorizacao automatica nao substitui CI, required checks, protecoes de branch, resolucao de conversas, CODEOWNERS, rulesets ou merge train;
+- repositorios de governanca corporativa permanecem fora da autoaprovacao.
 
-A politica executavel de cada repositorio fica em `.github/risk-policy.json`. Repositorios podem adicionar regras mais restritivas, mas nao reduzir o baseline corporativo sem excecao formal.
+A politica executavel de risco fica em `.github/risk-policy.json` / `.github/risk-policy-v2.json`, conforme o fluxo implantado. Repositorios podem adicionar regras mais restritivas, mas nao reduzir o baseline corporativo sem excecao formal.
 
 ## Regras obrigatorias para agentes
 
@@ -61,7 +62,7 @@ Antes de alterar qualquer arquivo, o agente deve ler as instrucoes do repositori
 - Nao fazer merge.
 - Nao aprovar o proprio trabalho.
 - Nao habilitar auto-merge por conta propria.
-- Informar claramente no PR os testes executados, cenarios nao testados, classificacao de risco quando disponivel e riscos residuais.
+- Informar testes executados, cenarios nao testados, classificacao de risco quando disponivel e riscos residuais.
 
 ### CI, testes e qualidade
 
@@ -84,30 +85,11 @@ Sem autorizacao explicita, o agente nao pode:
 
 Secrets nunca devem ser inseridos em prompts, codigo, commits, logs ou arquivos versionados.
 
-### Ambientes e producao
-
-- Respeitar a segregacao DEV / HML / PROD definida pelo repositorio.
-- Nao usar credenciais produtivas em DEV ou HML.
-- Nao publicar diretamente em PROD fora do fluxo corporativo.
-- Nao transformar um experimento em uso produtivo sem homologacao e aprovacao aplicaveis.
-
 ## Ferramentas no escopo oficial
 
-### Codex
-
-O arquivo raiz `AGENTS.md` e a instrucao operacional primaria do repositorio para Codex.
-
-### Claude
-
-O arquivo raiz `CLAUDE.md` deve importar ou reproduzir as regras do `AGENTS.md`, evitando divergencia entre agentes.
-
-### Devin
-
-Devin integra o escopo oficial corporativo e deve obedecer as mesmas regras do `AGENTS.md`. Conhecimentos, playbooks ou configuracoes especificas do Devin podem adicionar contexto do projeto, mas nao podem reduzir ou contradizer estas regras corporativas.
-
-## Hierarquia
-
-As regras deste padrao representam requisitos corporativos minimos. Instrucoes mais restritivas do repositorio, do sistema, de seguranca ou de um fluxo aprovado podem complementar estas regras. Instrucoes locais nao podem reduzir controles corporativos sem excecao formal aprovada.
+- Codex: `AGENTS.md` e a instrucao operacional primaria.
+- Claude: `CLAUDE.md` deve carregar as mesmas regras do `AGENTS.md`.
+- Devin: deve obedecer ao mesmo baseline; configuracoes especificas podem adicionar contexto, mas nunca reduzir controles.
 
 ## Fonte e sincronizacao
 
@@ -120,21 +102,50 @@ Repositorios corporativos devem manter, no minimo:
 - `DEVIN.md`
 - `.github/CODEOWNERS`
 - `.github/pull_request_template.md`
-- `.github/workflows/risk-classifier.yml`
-- `.github/risk-policy.json`
-- `docs/governanca-risco-pr.md`
+- politica de risco aplicavel
+- workflow classificador aplicavel
+- documentacao de governanca de risco
 
-O `ghorizonte/gh-automation` deve ser usado para verificar e sincronizar esses arquivos durante onboarding e regularizacao.
+O `ghorizonte/gh-automation` deve verificar e sincronizar esses artefatos durante onboarding e regularizacao.
 
-## Shadow mode
+## Pilot mode
 
-Enquanto o modo corporativo estiver configurado como `shadow`:
+Enquanto o modo corporativo estiver configurado como `pilot`:
 
 1. o classificador registra LOW, MEDIUM, HIGH ou CRITICAL;
-2. o resultado serve para aprendizado e auditoria;
-3. nenhuma classificacao dispensa aprovacao humana;
-4. o classificador nao deve habilitar merge, auto-merge ou bypass;
-5. resultados devem ser usados para calibrar falsos LOW, falsos HIGH e regras especificas por tecnologia/dominio.
+2. LOW e MEDIUM podem receber aprovacao automatica nos repositorios operacionais elegiveis, exceto os explicitamente excluidos pela policy;
+3. HIGH e CRITICAL exigem aprovacao humana;
+4. a identidade revisora automatica deve ser diferente do autor tecnico do PR;
+5. a aprovacao automatica so vale para o `head_sha` classificado; novo push exige nova classificacao e nova aprovacao;
+6. nenhum fluxo pode usar bypass para contornar required checks, CODEOWNERS, rulesets, protecoes de branch ou merge train;
+7. repositorios de governanca e exclusoes explicitas permanecem fora da autoaprovacao.
+
+## Matriz corporativa de acesso a repositorios
+
+A matriz versionada em `.github/repository-access-policy.json` e a fonte controlada para permissoes padrao de times nos repositorios da organizacao `ghorizonte`.
+
+Baseline:
+
+- `admins`: Admin;
+- `tech-leads`: Maintain;
+- `developers`: Write;
+- `risk-reviewers`: Write nos repositorios operacionais elegiveis.
+
+Excecoes Zonte Labs:
+
+- `zontelabs-tech-leads` substitui `tech-leads`, mantendo Maintain;
+- `zontelabs-developers` substitui `developers`, mantendo Write.
+
+O reconciliador `ghorizonte/gh-automation:.github/workflows/reconcile-repository-access.yml` roda periodicamente e por disparo manual. Ele:
+
+- adiciona times baseline ausentes;
+- corrige permissoes divergentes, inclusive reduzindo `tech-leads` de Admin para Maintain quando houver drift;
+- remove apenas times genericos explicitamente substituidos por override;
+- nao remove outros times ou colaboradores fora do baseline;
+- remove `risk-reviewers` dos repositorios de governanca;
+- ignora repositorios arquivados, forks e exclusoes declaradas na policy.
+
+A GitHub App usada pelo reconciliador deve permanecer instalada em todos os repositorios da organizacao e possuir, no minimo, as permissoes solicitadas pelo workflow: Administration write, Members read e Contents read. Assim, repositorios novos, importados ou copiados para `ghorizonte` passam a convergir automaticamente ao baseline na proxima reconciliacao, desde que pertençam a organizacao e nao estejam excluidos pela policy.
 
 ## Regra de encerramento da tarefa
 
@@ -146,4 +157,4 @@ Uma tarefa executada por agente so e considerada pronta para revisao quando:
 4. a branch estiver publicada;
 5. o PR for solicitado pelo fluxo corporativo de bot, ou o agente informar que nao conseguiu aciona-lo.
 
-Durante o shadow mode, a IA prepara e revisa a mudanca; a aprovacao final continua humana.
+Durante o piloto, LOW e MEDIUM podem seguir pela autorizacao automatica definida na policy; HIGH e CRITICAL continuam dependentes de aprovacao humana.
