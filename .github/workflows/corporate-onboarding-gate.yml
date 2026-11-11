@@ -1,0 +1,29 @@
+name: Corporate onboarding gate
+
+# Intended as an organization-required workflow only after a staged, reviewed
+# ruleset rollout. Merging this file does NOT enable organization blocking.
+on:
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  corporate-onboarding:
+    name: corporate-onboarding
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout reviewed organization control at workflow SHA
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          repository: ghorizonte/.github
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+          path: control
+      - name: Validate candidate merge tree without running target code
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 control/scripts/corporate_onboarding_gate.py --repository "$GITHUB_REPOSITORY" --sha "$GITHUB_SHA"

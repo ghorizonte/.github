@@ -1,0 +1,30 @@
+name: Corporate onboarding guard safety tests
+on:
+  pull_request:
+    paths:
+      - scripts/corporate_onboarding_gate.py
+      - tests/test_corporate_onboarding_gate.py
+      - .github/workflows/corporate-onboarding-gate.yml
+      - .github/workflows/corporate-onboarding-tests.yml
+  push:
+    branches: [main]
+    paths:
+      - scripts/corporate_onboarding_gate.py
+      - tests/test_corporate_onboarding_gate.py
+      - .github/workflows/corporate-onboarding-gate.yml
+      - .github/workflows/corporate-onboarding-tests.yml
+permissions:
+  contents: read
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout branch without persistent credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Run offline governance tests
+        run: python3 -m unittest discover -s tests -p 'test_corporate_onboarding_gate.py' -v
+      - name: Validate parser syntax
+        run: python3 -m py_compile scripts/corporate_onboarding_gate.py tests/test_corporate_onboarding_gate.py
