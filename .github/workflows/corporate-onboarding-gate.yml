@@ -13,6 +13,9 @@ permissions:
 jobs:
   corporate-onboarding:
     name: corporate-onboarding
+    # Explicit condition enables cross-repository ruleset workflow execution.
+    # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/troubleshooting-rules#supported-directory
+    if: ${{ true }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
