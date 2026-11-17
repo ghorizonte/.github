@@ -11,6 +11,9 @@ Descreva de forma clara o problema resolvido ou a melhoria implementada.
 - [ ] Alteração de banco de dados
 - [ ] Outro
 
+## Rotinas existentes modificadas (obrigatorio)
+<!-- Identifique o que foi modificado nas rotinas existentes e o comportamento antes/depois, ainda que nenhuma rota seja removida. Se nao houver, escreva Nenhuma. -->
+
 ## Mudanca de escopo / remocao funcional (obrigatorio)
 - [ ] Sem mudanca de escopo/remocao funcional
 - [ ] MUDANCA DE ESCOPO AUTORIZADA: remocao/substituicao/descontinuacao intencional
