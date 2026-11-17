@@ -11,6 +11,21 @@ Descreva de forma clara o problema resolvido ou a melhoria implementada.
 - [ ] Alteração de banco de dados
 - [ ] Outro
 
+## Mudanca de escopo / remocao funcional (obrigatorio)
+- [ ] Sem mudanca de escopo/remocao funcional
+- [ ] MUDANCA DE ESCOPO AUTORIZADA: remocao/substituicao/descontinuacao intencional
+
+**Antes / depois e itens removidos:**
+<!-- Liste rotas, endpoints, modulos, telas, processos ou contratos retirados/substituidos. -->
+
+**Autorizacao e referencia:**
+<!-- Registre a decisao verificavel ou informe autorizacao conversacional sem inventar evidencias. -->
+
+**Impacto, migracao e rollback:**
+<!-- Registre consumidores afetados e procedimento aplicavel, sem expor informacoes internas sensiveis. -->
+
+**Testes adaptados ao novo contrato:**
+<!-- Mostre como os testes de regressao foram preservados/atualizados. Nao remova testes somente para deixar CI verde. -->
 ## Impacto
 Descreva, de forma não sensível, os sistemas, processos ou usuários impactados.
 
@@ -56,6 +71,7 @@ Informe o nível de risco da alteração:
 - [ ] Não existem dados pessoais ou confidenciais expostos
 - [ ] A documentação foi atualizada quando necessário
 - [ ] A alteração está restrita ao escopo deste PR
+- [ ] Remocoes e mudancas de escopo intencionais foram declaradas, ou foi marcado que nao houve
 - [ ] Dependências e impactos foram avaliados
 - [ ] Alterações sensíveis foram documentadas apenas em ambiente interno apropriado
 
